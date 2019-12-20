@@ -30,5 +30,10 @@ namespace WowBot
 
 			Memory.Write((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Action, (int)CTMAction.Move);
 		}
+
+		public void Stop()
+		{
+			Memory.Write((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Action, (int)CTMAction.Stop);
+		}
 	}
 }

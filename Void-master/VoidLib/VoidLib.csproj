@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ECB797DC-902E-404A-B9BB-5356BC6AFFC4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VoidLib</RootNamespace>
+    <AssemblyName>BlackRain</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>bin\Debug\BlackRain.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BlackMagic">
+      <HintPath>..\libs\BlackMagic.dll</HintPath>
+    </Reference>
+    <Reference Include="fasmdll_managed">
+      <HintPath>..\libs\fasmdll_managed.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="MongoDB.Bson">
+      <HintPath>..\libs\MongoDB.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="MongoDB.Driver">
+      <HintPath>..\Libs\MongoDB.Driver.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\Logging.cs" />
+    <Compile Include="Common\Objects\ObjectManager.cs" />
+    <Compile Include="Common\Objects\WowContainer.cs" />
+    <Compile Include="Common\Objects\WowCorpse.cs" />
+    <Compile Include="Common\Objects\WowDynamicObject.cs" />
+    <Compile Include="Common\Objects\WowGameObject.cs" />
+    <Compile Include="Common\Objects\WowItem.cs" />
+    <Compile Include="Common\Objects\WowObject.cs" />
+    <Compile Include="Common\Objects\WowPlayer.cs" />
+    <Compile Include="Common\Objects\WowPlayerMe.cs" />
+    <Compile Include="Common\Objects\WowUnit.cs" />
+    <Compile Include="Common\Offsets.cs" />
+    <Compile Include="Common\Point.cs" />
+    <Compile Include="Common\Utilities.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Helpers\MongoHelper.cs" />
+    <Compile Include="Helpers\ScriptHelper.cs" />
+    <Compile Include="Helpers\SQLHelper.cs" />
+    <Compile Include="Helpers\CTMHelper.cs" />
+    <Compile Include="Helpers\LUAHelper.cs" />
+    <Compile Include="Injection\Hook.cs" />
+    <Compile Include="Navigation\Pathfinding\INode.cs" />
+    <Compile Include="Navigation\Pathfinding\PathFinder.cs" />
+    <Compile Include="Navigation\Waypoint.cs" />
+    <Compile Include="Navigation\WaypointManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\BotUtils.cs" />
+    <Compile Include="Utils\WorldUtils.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

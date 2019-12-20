@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TilePrototypes>
+  <TilePrototype>
+    <IsPassable>true</IsPassable>
+    <TextureFilename>dirt</TextureFilename>
+  </TilePrototype>
+  <TilePrototype>
+    <IsPassable>true</IsPassable>
+    <TextureFilename>darkdirt</TextureFilename>
+  </TilePrototype>
+  <TilePrototype>
+    <IsPassable>true</IsPassable>
+    <TextureFilename>wetdirt</TextureFilename>
+  </TilePrototype>
+  <TilePrototype>
+    <IsPassable>false</IsPassable>
+    <TextureFilename>rock1</TextureFilename>
+  </TilePrototype>
+  <TilePrototype>
+    <IsPassable>false</IsPassable>
+    <TextureFilename>rock2</TextureFilename>
+  </TilePrototype>
+  <TilePrototype>
+    <IsPassable>false</IsPassable>
+    <TextureFilename>shrub</TextureFilename>
+  </TilePrototype>
+  <TilePrototype>
+    <IsPassable>false</IsPassable>
+    <TextureFilename>stump</TextureFilename>
+  </TilePrototype>
+</TilePrototypes>
