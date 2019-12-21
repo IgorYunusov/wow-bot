@@ -8,18 +8,30 @@ namespace WowBot
 {
 	class RunHandler
 	{
-		public Vector3 Target { get; private set; } = new Vector3();
-		public Vector3 Position { get; private set; } = new Vector3();
-
-		public void Update()
+		Vector3 target = new Vector3();
+		public Vector3 Target
 		{
-			Target.x = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_X);
-			Target.y = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Y);
-			Target.z = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Z);
+			get
+			{
+				target.x = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_X);
+				target.y = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Y);
+				target.z = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Z);
 
-			Position.x = Memory.ReadFloat((int)Coords.X);
-			Position.y = Memory.ReadFloat((int)Coords.Y);
-			Position.z = Memory.ReadFloat((int)Coords.Z);
+				return target;
+			}
+		}
+
+		Vector3 position = new Vector3();
+		public Vector3 Position
+		{
+			get
+			{
+				position.x = Memory.ReadFloat((int)Coords.X);
+				position.y = Memory.ReadFloat((int)Coords.Y);
+				position.z = Memory.ReadFloat((int)Coords.Z);
+
+				return position;
+			}
 		}
 
 		public void MoveTo(Vector3 target)
