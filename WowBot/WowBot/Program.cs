@@ -13,7 +13,6 @@ namespace WowBot
 
 		static void Main(string[] args)
 		{
-
 			Init();
 
 			Thread.Sleep(2000);
@@ -21,7 +20,6 @@ namespace WowBot
 
 			while (true)
 			{
-				Update();
 				//Console.Clear();
 
 				//runHandler.MoveTo(runHandler.Position + new Vector3(1,0,0));
@@ -33,10 +31,6 @@ namespace WowBot
 		private static void Init()
 		{
 			runHandler = new RunHandler();
-		}
-
-		private static void Update()
-		{
 		}
 
 	}
