@@ -8,5 +8,11 @@ https://jbremer.org/x86-api-hooking-demystified/
 https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/423431-c-help-different-methods-of-calling-wow-functions-dll-injection-hooking-etc.html?__cf_chl_jschl_tk__=d616102f6fcf415e557224cd218ef393ae8c617a-1576846202-0-AZ2iRxepHN-cTw8e6k-hviIoG45f5zhGv_ctiEmzQ5SsRWiXdXanbh2qRJca2hQFUMIa2L2yUXXhGLbjp5Tq-aYWSw4RZMs2LXq7txWXaTre-pfz0UBJxkXbhfZhNlnauiJoU93yzigZlfXYYbpJWvb2z_Kb6hM9-MS3P8Bn8x8yg3sjU1RISQ5MqxeitCnr85nzAwZYwQUKGYpWV9FW1DXt6S388_HS0eboHJIVvV8E7GSDYeXitSn1zB4hzgNP0-pJORnZlXAHwN_Wx9yGsF2tz5F4uZS3my8Hv39uSw-5bAAm9RmEvrhZoBLNaGs9RWgQRKMHOmPozraUpP44ryVHjTXiPVn2LKJ11X4YhxzWUVUHWZUPy-xuinq7oFgiEDsytKEE0YlnOKHBANN9u7o4moGKQIe29ZqOGQxeUETk1STTdqIORtoy72E3hH3TXUtLyT2DHgsbuVSYx1mQOJYNrErGguT5ohkmJb0r8CIQ
 
 https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/422715-c-asm-injection-setthreadcontext.html
-
 https://github.com/GrayKernel/GrayFrost
+https://guidedhacking.com/threads/c-dll-loader-embedded-injector.14177/
+https://guidedhacking.com/threads/must-do-gh-tutorials.9691/
+
+https://www.ownedcore.com/forums/world-of-warcraft/world-of-warcraft-bots-programs/wow-memory-editing/220185-wow-3-0-9-way-get-return-values-lua-functions.html
+
+EZZEL LETT MEGOLDVA A DOSTRING!%!
+	https://excellzone.forumotion.net/t2786-sample-code-endscene-hook-with-asm-and-blackmagic
