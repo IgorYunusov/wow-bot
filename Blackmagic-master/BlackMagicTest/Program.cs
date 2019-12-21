@@ -4,6 +4,7 @@ using System.Linq;
 using System.Diagnostics;
 using System.Text;
 using Magic;
+using System.Threading;
 
 namespace BlackMagicTest
 {
@@ -16,153 +17,32 @@ namespace BlackMagicTest
 		private const string PATTERN_CLIENT_CONNECTION = "EB 02 33 C0 8B 0D 00 00 00 00 64 8B 15 00 00 00 00 8B 34 8A 8B 0D 00 00 00 00 89 81 00 00 00 00";
 		private const string MASK_CLIENT_CONNECTION = "xxxxxx????xxx????xxxxx????xx????";
 
-		static BlackMagic wow;
+		public static BlackMagic wow;
 
 		static void Main(string[] args)
 		{
 			uint dwCodeLoc;
 			wow = new BlackMagic();
 
-			RunSomeLua();
-
-			//if (wow.OpenProcessAndThread(SProcess.GetProcessFromProcessName("wow")))
-			//{
-			//	Console.WriteLine(wow.GetModuleFilePath());
-			//	DateTime dt = DateTime.Now;
-			//
-			//	//dwCodeLoc = SPattern.FindPattern(wow.ProcessHandle, wow.MainModule, PATTERN_CLIENT_CONNECTION, MASK_CLIENT_CONNECTION, ' ');
-			//	dwCodeLoc = wow.FindPattern(PATTERN_CLIENT_CONNECTION, MASK_CLIENT_CONNECTION);
-			//	Console.WriteLine("Pattern found in {0}ms", DateTime.Now.Subtract(dt).TotalMilliseconds);
-			//	Console.WriteLine("Code loc: 0x{0:X08}", dwCodeLoc);
-			//	Console.WriteLine("CLIENT_CONNECTION: 0x{0:X08}", wow.ReadUInt(dwCodeLoc + 0x16));
-			//	Console.WriteLine("CURMGR_OFFSET: 0x{0:X08}", wow.ReadUInt(dwCodeLoc + 0x1C));
-			//
-			//}
-			//else
-			//{
-			//	Console.WriteLine("World of Warcraft could not be opened for read/write.");
-			//}
-			//
-			//Console.ReadLine();
-		}
-
-		static void RunSomeLua()
-		{
-			string username = "fecoooooo";
-			string password = "19000000";
-
-
-			var a = wow.OpenProcessAndThread(SProcess.GetProcessFromWindowTitle("World of Warcraft")); //This Opens "World of Warcraft" window
-
-			string Command = " ShowCloak(false)";
-			wow.SuspendThread();
-
-
-			// Allocate memory for command
-
-			uint DoString_space = wow.AllocateMemory(Encoding.UTF8.GetBytes(Command).Length + 1);
-
-
-			// Write command in the allocated memory
-
-			wow.WriteBytes(DoString_space, Encoding.UTF8.GetBytes(Command));
-
-			wow.Asm.Clear();
-
-			// Write the asm stuff for Lua_DoString
+			if (wow.OpenProcessAndThread(SProcess.GetProcessFromProcessName("wow")))
+			{
+				Console.WriteLine(wow.GetModuleFilePath());
+				DateTime dt = DateTime.Now;
 			
-			wow.Asm.AddLine("mov eax, " + DoString_space);
-
-			wow.Asm.AddLine("push 0");
-
-			wow.Asm.AddLine("push eax");
-
-			wow.Asm.AddLine("push eax");
-
-			wow.Asm.AddLine("mov eax, 0x005222E0"); // Lua_DoString for 3.3.5
-
-			wow.Asm.AddLine("call eax");
-
-			wow.Asm.AddLine("add esp, 0xC");
-
-			wow.Asm.AddLine("retn");
-
-			/*wow.Asm.AddLine("mov eax, 0");
-			wow.Asm.AddLine("push eax");
-			wow.Asm.AddLine("mov eax, {0}", DoString_space);
-			wow.Asm.AddLine("push eax");
-			wow.Asm.AddLine("push eax");
-			wow.Asm.AddLine("call {0}", 0x00819210);
-			wow.Asm.AddLine("add esp, 0xC");*/
-
-			// Inject the shit
-
-			wow.Asm.InjectAndExecute(DoString_space);
-
-			// Free memory allocated for command
-
-			wow.FreeMemory(DoString_space);
-
-
-
-			wow.ResumeThread();
-		}
-
-		static void RunSomeLuaOriginal()
-		{
-			string username = "fecoooooo";
-			string password = "19000000";
+				//dwCodeLoc = SPattern.FindPattern(wow.ProcessHandle, wow.MainModule, PATTERN_CLIENT_CONNECTION, MASK_CLIENT_CONNECTION, ' ');
+				dwCodeLoc = wow.FindPattern(PATTERN_CLIENT_CONNECTION, MASK_CLIENT_CONNECTION);
+				Console.WriteLine("Pattern found in {0}ms", DateTime.Now.Subtract(dt).TotalMilliseconds);
+				Console.WriteLine("Code loc: 0x{0:X08}", dwCodeLoc);
+				Console.WriteLine("CLIENT_CONNECTION: 0x{0:X08}", wow.ReadUInt(dwCodeLoc + 0x16));
+				Console.WriteLine("CURMGR_OFFSET: 0x{0:X08}", wow.ReadUInt(dwCodeLoc + 0x1C));
 			
-
-			var a = wow.OpenProcessAndThread(SProcess.GetProcessFromWindowTitle("World of Warcraft")); //This Opens "World of Warcraft" window
-
-			string Command = "DefaultServerLogin(" + username + ", " + password + ")";
-			wow.SuspendThread();
-
-
-			// Allocate memory for command
-
-			uint DoString_space = wow.AllocateMemory(Encoding.UTF8.GetBytes(Command).Length + 1);
-
-
-
-			// Write command in the allocated memory
-
-			wow.WriteBytes(DoString_space, Encoding.UTF8.GetBytes(Command));
-
-			wow.Asm.Clear();
-
-			// Write the asm stuff for Lua_DoString
-
-			wow.Asm.AddLine("mov eax, " + DoString_space);
-
-			wow.Asm.AddLine("push 0");
-
-			wow.Asm.AddLine("push eax");
-
-			wow.Asm.AddLine("push eax");
-
-			wow.Asm.AddLine("mov eax, 0x005222E0"); // Lua_DoString for 3.3.5
-
-			wow.Asm.AddLine("call eax");
-
-			wow.Asm.AddLine("add esp, 0xC");
-
-			wow.Asm.AddLine("retn");
-
-
-
-			// Inject the shit
-
-			//wow.Asm.InjectAndExecute(DoString_space);
-
-			// Free memory allocated for command
-
-			wow.FreeMemory(DoString_space);
-
-
-
-			wow.ResumeThread();
+			}
+			else
+			{
+				Console.WriteLine("World of Warcraft could not be opened for read/write.");
+			}
+			
+			Console.ReadLine();
 		}
 	}
 }
