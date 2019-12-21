@@ -28,8 +28,8 @@ namespace VoidLib.Injection
         public void Hooking()
         {
             // Offset:
-            uint DX_DEVICE = 0xAD773C + baseAdress;
-            uint DX_DEVICE_IDX = 0x27F8;
+            uint DX_DEVICE = 0xC5DF88;
+            uint DX_DEVICE_IDX = 0x397C;
             uint ENDSCENE_IDX = 0xA8;
 
             // Process Connect:
