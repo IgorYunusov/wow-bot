@@ -16,11 +16,11 @@ namespace WowBot
 		{
 			Init();
 			Bot bot = new Bot();
-			//Console.WriteLine(LuaHelper.GetContainerNumFreeSlots());
 
 			while (true)
 			{
-				//Console.Clear();
+				Console.Clear();
+				bot.Update();
 				//ObjectManager.GetAllObjects();
 
 				//runHandler.MoveTo(runHandler.Position + new Vector3(1,0,0));

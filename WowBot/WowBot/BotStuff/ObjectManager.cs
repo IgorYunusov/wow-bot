@@ -3,17 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WowBot.Utils.WowObject;
+using static WowBot.Utils.WowObject.Unit;
 
 namespace WowBot
 {
 	class ObjectManager
 	{
 		static uint objectManager;
+		static List<GameObject> gameObjects = new List<GameObject>();
 
 		static ObjectManager()
 		{
 			uint CurMgr = Memory.Read<uint>((uint)ObjectManagerEnum.CurMgrPointer);
 			objectManager = Memory.Read<uint>(CurMgr + (uint)ObjectManagerEnum.CurMgrOffset);
+		}
+
+		public static List<T> GetObjects<T>()
+		{
+			CollectAllObjects();
+
+			return gameObjects.OfType<T>().ToList();
 		}
 
 		//public static int GetPlayerAdress()
@@ -36,24 +46,33 @@ namespace WowBot
 		//
 		//	return 0;
 		//}
+		
 
-		public static void GetAllObjects()
+		public static void CollectAllObjects()
 		{
+			gameObjects.Clear();
+
 			uint currObjPtr = objectManager + (uint)ObjectManagerEnum.FirstObject;
 			uint currentObjBase = Memory.Read<uint>(currObjPtr);
 
 			// don't know why but currentObjBase % 2 operation makes it work
 			while (currentObjBase != uint.MinValue && currentObjBase%2 == uint.MinValue) 
 			{
-				string GUID = Memory.Read<long>(currentObjBase + 0x30).ToString("X");
+				ulong guid = Memory.Read<ulong>(currentObjBase + (int)ObjectOffsets.Guid);
+				GOType type = (GOType) Memory.Read<short>(currentObjBase + (uint)ObjectOffsets.Type);
 
-				short type = Memory.Read<short>(currentObjBase + (uint)ObjectOffsets.Type);
-				if (type == 3)
+				if (type == GOType.Unit)
 				{
 					string name = GetName(currentObjBase);
+					//ReactionType reaction = LuaHelper.GetReactionType(guid.ToString("X"));
+					ReactionType reaction = ReactionType.Friendly;
+					gameObjects.Add(new Unit(guid, type, name, reaction));
 					Console.WriteLine(name);
 				}
-
+				else
+				{
+					gameObjects.Add(new GameObject(guid, type));
+				}
 
 				currObjPtr = currentObjBase + (uint)ObjectManagerEnum.NextObject;
 				currentObjBase = Memory.Read<uint>(currObjPtr);

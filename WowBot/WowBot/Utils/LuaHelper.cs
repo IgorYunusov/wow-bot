@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WowBot.Utils.WowObject;
 
 namespace WowBot
 {
@@ -17,7 +19,8 @@ namespace WowBot
 			var proc = Process.GetProcessesByName("wow")[0];
 			var a = MagicHandler.BMWow.OpenProcessAndThread(SProcess.GetProcessFromWindowTitle("World of Warcraft")); //This Opens "World of Warcraft" window
 
-			MyHook = new Hook(proc.Id);
+			if (MyHook == null)
+				MyHook = new Hook(proc.Id);
 
 			uint DoStringArg_Codecave = MyHook.Memory.AllocateMemory(Encoding.UTF8.GetBytes(command).Length + 1); // offset:
 			uint FrameScript__Execute = 0x819210; // Write value:
@@ -58,10 +61,35 @@ namespace WowBot
 			return sResult;
 		}
 
+		internal static Unit.ReactionType GetReactionType(string guid)
+		{
+			DoString($"reaction = UnitReaction(\"{guid}\", \"player\");");
+			
+			return (Unit.ReactionType)Convert.ToInt32(GetLocalizedText("reaction"));
+		}
+
 		public static int GetContainerNumFreeSlots()
 		{
 			DoString("freeslots = GetContainerNumFreeSlots(0) + GetContainerNumFreeSlots(1) + GetContainerNumFreeSlots(2) + GetContainerNumFreeSlots(3) + GetContainerNumFreeSlots(4)");
 			return Convert.ToInt32(GetLocalizedText("freeslots"));
+		}
+
+		public static bool IsAuraActive(string auraName, string target = "player")
+		{
+			DoString($"name = UnitAura(\"{target}\", \"{auraName}\")");
+			return GetLocalizedText("name") != "";
+		}
+
+		internal static void CastSpellByName(string spellName)
+		{
+			DoString($"CastSpellByName(\"{spellName}\")");
+		}
+
+		internal static bool IsSpellCastable(string spellName)
+		{
+			DoString($"usable = IsUsableSpell(\"{spellName}\")");
+			var a = GetLocalizedText("usable");
+			return "1" == GetLocalizedText("usable");
 		}
 	}
 }

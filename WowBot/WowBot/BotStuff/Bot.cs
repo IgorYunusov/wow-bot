@@ -33,5 +33,6 @@ namespace WowBot.BotStuff
 		{
 			Memory.Write<uint>((uint)Globals.LastHardwareAction, Memory.Read<uint>((uint)Globals.Timestamp));
 		}
+		
 	}
 }
