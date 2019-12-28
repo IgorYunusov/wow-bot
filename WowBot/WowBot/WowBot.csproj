@@ -55,17 +55,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Address.cs" />
-    <Compile Include="Hook.cs" />
-    <Compile Include="LuaHelper.cs" />
-    <Compile Include="MagicHandler.cs" />
-    <Compile Include="Memory.cs" />
-    <Compile Include="ObjectManager.cs" />
-    <Compile Include="PlayerInfo.cs" />
+    <Compile Include="BotStuff\Bot.cs" />
+    <Compile Include="BotStuff\State\CombatState.cs" />
+    <Compile Include="BotStuff\State\IBotState.cs" />
+    <Compile Include="Utils\Address.cs" />
+    <Compile Include="Utils\Hook.cs" />
+    <Compile Include="Utils\LuaHelper.cs" />
+    <Compile Include="Utils\MagicHandler.cs" />
+    <Compile Include="Utils\Memory.cs" />
+    <Compile Include="BotStuff\ObjectManager.cs" />
+    <Compile Include="BotStuff\PlayerInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RunHandler.cs" />
-    <Compile Include="Vector3.cs" />
+    <Compile Include="BotStuff\RunHandler.cs" />
+    <Compile Include="Utils\Vector3.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

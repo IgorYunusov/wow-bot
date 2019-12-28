@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using WowBot.BotStuff;
 
 namespace WowBot
 {
@@ -14,13 +15,13 @@ namespace WowBot
 		static void Main(string[] args)
 		{
 			Init();
-
-			Thread.Sleep(2000);
-			Console.WriteLine(LuaHelper.GetContainerNumFreeSlots());
+			Bot bot = new Bot();
+			//Console.WriteLine(LuaHelper.GetContainerNumFreeSlots());
 
 			while (true)
 			{
 				//Console.Clear();
+				//ObjectManager.GetAllObjects();
 
 				//runHandler.MoveTo(runHandler.Position + new Vector3(1,0,0));
 

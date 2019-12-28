@@ -13,9 +13,9 @@ namespace WowBot
 		{
 			get
 			{
-				target.x = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_X);
-				target.y = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Y);
-				target.z = Memory.ReadFloat((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Z);
+				target.x = Memory.Read<float>((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_X);
+				target.y = Memory.Read<float>((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Y);
+				target.z = Memory.Read<float>((int)ClickToMove.CTM_Base + (int)ClickToMove.CTM_Z);
 
 				return target;
 			}
@@ -26,9 +26,9 @@ namespace WowBot
 		{
 			get
 			{
-				position.x = Memory.ReadFloat((int)Coords.X);
-				position.y = Memory.ReadFloat((int)Coords.Y);
-				position.z = Memory.ReadFloat((int)Coords.Z);
+				position.x = Memory.Read<float>((int)Coords.X);
+				position.y = Memory.Read<float>((int)Coords.Y);
+				position.z = Memory.Read<float>((int)Coords.Z);
 
 				return position;
 			}

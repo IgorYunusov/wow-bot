@@ -17,44 +17,19 @@ namespace WowBot
 			process = new MemorySharp(ApplicationFinder.FromProcessName("Wow").First());
 		}
 
-		public static string ReadString(int offset)
+		public static string ReadString(uint offset)
 		{
 			return process.ReadString(new IntPtr(offset), Encoding.UTF8, false);
 		}
 
-		public static float ReadFloat(int offset)
+		internal static T Read<T>(uint address)
 		{
-			return process[new IntPtr(offset), false].Read<float>();
+			return process[new IntPtr(address), false].Read<T>();
 		}
 
-		public static int ReadByte(int offset)
+		internal static void Write<T>(uint address, T value)
 		{
-			return process[new IntPtr(offset), false].Read<byte>();
-		}
-
-		public static int ReadShort(int offset)
-		{
-			return process[new IntPtr(offset), false].Read<short>();
-		}
-
-		public static int ReadInt(int offset)
-		{
-			return process[new IntPtr(offset), false].Read<int>();
-		}
-
-		public static long ReadLong(int offset)
-		{
-			return process[new IntPtr(offset), false].Read<long>();
-		}
-
-		internal static string ReadHexAsString(int offset)
-		{
-			return ReadLong(offset).ToString("X");
-		}
-
-		internal static void Write<T>(int offset, T value)
-		{
-			process.Write<T>(new IntPtr(offset), value, false);
+			process.Write<T>(new IntPtr(address), value, false);
 		}
 	}
 }
