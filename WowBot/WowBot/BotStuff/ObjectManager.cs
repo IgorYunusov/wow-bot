@@ -13,7 +13,9 @@ namespace WowBot
 		static uint objectManager;
 		static List<GameObject> gameObjects = new List<GameObject>();
 		static DateTime lastScanTime;
-		const int UpdateAfterMillis = 1000;
+		const int UpdateAfterMillis = 1;
+
+		static Dictionary<ulong, ReactionType> reactionCache = new Dictionary<ulong, ReactionType>();
 
 		static ObjectManager()
 		{
@@ -46,13 +48,14 @@ namespace WowBot
 			gameObjects.Clear();
 
 			uint currObjPtr = objectManager + (uint)ObjectManagerEnum.FirstObject;
-			uint currentObjBase = Memory.Read<uint>(currObjPtr);
+			uint currentObjBaseAddress = Memory.Read<uint>(currObjPtr);
 
 			// don't know why but currentObjBase % 2 operation makes it work
-			while (currentObjBase != uint.MinValue && currentObjBase%2 == uint.MinValue) 
+			while (currentObjBaseAddress != uint.MinValue && currentObjBaseAddress%2 == uint.MinValue) 
 			{
-				ulong guid = Memory.Read<ulong>(currentObjBase + (int)ObjectOffsets.Guid);
-				GOType type = (GOType) Memory.Read<short>(currentObjBase + (uint)ObjectOffsets.Type);
+				float x = Memory.Read<float>(currentObjBaseAddress + (int)ObjectOffsets.Pos_X);
+				ulong guid = Memory.Read<ulong>(currentObjBaseAddress + (int)ObjectOffsets.Guid);
+				GOType type = (GOType) Memory.Read<short>(currentObjBaseAddress + (uint)ObjectOffsets.Type);
 
 				switch (type)
 				{
@@ -63,14 +66,18 @@ namespace WowBot
 					case GOType.Container:
 						break;
 					case GOType.Unit:
-						string name = GetName(currentObjBase);
-						ReactionType reaction = LuaHelper.GetReactionType(guid);
-						gameObjects.Add(new Unit(guid, type, name, reaction));
+						string name = GetName(currentObjBaseAddress);
+
+						if (false == reactionCache.ContainsKey(guid))
+							reactionCache.Add(guid, LuaHelper.GetReactionType(guid));
+
+						ReactionType reaction = reactionCache[guid];
+						gameObjects.Add(new Unit(currentObjBaseAddress, guid, type, name, reaction));
 						break;
 					case GOType.Player:
 						break;
 					case GOType.GameObject:
-						gameObjects.Add(new GameObject(guid, type));
+						gameObjects.Add(new GameObject(currentObjBaseAddress ,guid, type));
 						break;
 					case GOType.DynamicObject:
 						break;
@@ -80,8 +87,8 @@ namespace WowBot
 						break;
 				}
 
-				currObjPtr = currentObjBase + (uint)ObjectManagerEnum.NextObject;
-				currentObjBase = Memory.Read<uint>(currObjPtr);
+				currObjPtr = currentObjBaseAddress + (uint)ObjectManagerEnum.NextObject;
+				currentObjBaseAddress = Memory.Read<uint>(currObjPtr);
 
 			} ;
 		}
