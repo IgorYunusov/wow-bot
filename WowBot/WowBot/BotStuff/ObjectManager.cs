@@ -8,45 +8,38 @@ using static WowBot.Utils.WowObject.Unit;
 
 namespace WowBot
 {
-	class ObjectManager
+	static class ObjectManager
 	{
 		static uint objectManager;
 		static List<GameObject> gameObjects = new List<GameObject>();
+		static DateTime lastScanTime;
+		const int UpdateAfterMillis = 1000;
 
 		static ObjectManager()
 		{
 			uint CurMgr = Memory.Read<uint>((uint)ObjectManagerEnum.CurMgrPointer);
 			objectManager = Memory.Read<uint>(CurMgr + (uint)ObjectManagerEnum.CurMgrOffset);
+			lastScanTime = DateTime.Now;
+		}
+
+		public static void Update()
+		{
+			if ((DateTime.Now - lastScanTime).TotalMilliseconds > UpdateAfterMillis)
+			{
+				CollectAllObjects();
+				lastScanTime = DateTime.Now;
+			}
+		}
+
+		public static List<Unit> GetEnemies()
+		{
+			return gameObjects.OfType<Unit>().Where(u => u.IsAttackable()).ToList();
 		}
 
 		public static List<T> GetObjects<T>()
 		{
-			CollectAllObjects();
-
 			return gameObjects.OfType<T>().ToList();
 		}
-
-		//public static int GetPlayerAdress()
-		//{
-		//	string playerGUID = Memory.ReadHexAsString(objectManager + (int)ObjectManagerEnum.LocalGUID);
-		//
-		//	int currObjPtr = objectManager + (int)ObjectManagerEnum.FirstObject;
-		//	int currObj = Memory.ReadInt(currObjPtr);
-		//
-		//	while (currObj != 0)
-		//	{
-		//		currObj = Memory.ReadInt(currObjPtr);
-		//		String GUID = Memory.ReadHexAsString(currObj + 0x30);
-		//
-		//		if (GUID == playerGUID)
-		//			return currObj;
-		//
-		//		currObjPtr = currObj + (int)ObjectManagerEnum.NextObject;
-		//	}
-		//
-		//	return 0;
-		//}
-		
 
 		public static void CollectAllObjects()
 		{
@@ -61,17 +54,30 @@ namespace WowBot
 				ulong guid = Memory.Read<ulong>(currentObjBase + (int)ObjectOffsets.Guid);
 				GOType type = (GOType) Memory.Read<short>(currentObjBase + (uint)ObjectOffsets.Type);
 
-				if (type == GOType.Unit)
+				switch (type)
 				{
-					string name = GetName(currentObjBase);
-					//ReactionType reaction = LuaHelper.GetReactionType(guid.ToString("X"));
-					ReactionType reaction = ReactionType.Friendly;
-					gameObjects.Add(new Unit(guid, type, name, reaction));
-					Console.WriteLine(name);
-				}
-				else
-				{
-					gameObjects.Add(new GameObject(guid, type));
+					case GOType.None:
+						break;
+					case GOType.Item:
+						break;
+					case GOType.Container:
+						break;
+					case GOType.Unit:
+						string name = GetName(currentObjBase);
+						ReactionType reaction = LuaHelper.GetReactionType(guid);
+						gameObjects.Add(new Unit(guid, type, name, reaction));
+						break;
+					case GOType.Player:
+						break;
+					case GOType.GameObject:
+						gameObjects.Add(new GameObject(guid, type));
+						break;
+					case GOType.DynamicObject:
+						break;
+					case GOType.Corpse:
+						break;
+					default:
+						break;
 				}
 
 				currObjPtr = currentObjBase + (uint)ObjectManagerEnum.NextObject;

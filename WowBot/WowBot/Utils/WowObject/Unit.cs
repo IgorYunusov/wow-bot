@@ -17,6 +17,11 @@ namespace WowBot.Utils.WowObject
 			this.Reaction = Reaction;
 		}
 
+		public bool IsAttackable()
+		{
+			return Reaction <= ReactionType.Neutral;
+		}
+
 		public enum ReactionType
 		{
 			Unknown = 0,

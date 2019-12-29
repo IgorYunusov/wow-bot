@@ -25,7 +25,7 @@ namespace WowBot.BotStuff.State
 
 		private void DecideTarget()
 		{
-			var a = ObjectManager.GetObjects<Unit>();
+			var a = ObjectManager.GetEnemies();
 			foreach(var b in a)
 			{
 				Console.WriteLine(b.Name);

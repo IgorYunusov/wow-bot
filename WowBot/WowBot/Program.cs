@@ -19,11 +19,10 @@ namespace WowBot
 
 			while (true)
 			{
+				ObjectManager.Update();
+
 				Console.Clear();
 				bot.Update();
-				//ObjectManager.GetAllObjects();
-
-				//runHandler.MoveTo(runHandler.Position + new Vector3(1,0,0));
 
 				Thread.Sleep(50);
 			}

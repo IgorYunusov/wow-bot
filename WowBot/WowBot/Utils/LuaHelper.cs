@@ -17,7 +17,6 @@ namespace WowBot
 		public static void DoString(string command)
 		{ // Allocate memory
 			var proc = Process.GetProcessesByName("wow")[0];
-			var a = MagicHandler.BMWow.OpenProcessAndThread(SProcess.GetProcessFromWindowTitle("World of Warcraft")); //This Opens "World of Warcraft" window
 
 			if (MyHook == null)
 				MyHook = new Hook(proc.Id);
@@ -61,10 +60,10 @@ namespace WowBot
 			return sResult;
 		}
 
-		internal static Unit.ReactionType GetReactionType(string guid)
+		internal static Unit.ReactionType GetReactionType(ulong guid)
 		{
-			DoString($"reaction = UnitReaction(\"{guid}\", \"player\");");
-			
+			Memory.Write<ulong>((int)Globals.CurrentTargetGUID, guid);
+			DoString($"reaction = UnitReaction(\"target\", \"player\");");
 			return (Unit.ReactionType)Convert.ToInt32(GetLocalizedText("reaction"));
 		}
 
@@ -88,7 +87,6 @@ namespace WowBot
 		internal static bool IsSpellCastable(string spellName)
 		{
 			DoString($"usable = IsUsableSpell(\"{spellName}\")");
-			var a = GetLocalizedText("usable");
 			return "1" == GetLocalizedText("usable");
 		}
 	}
