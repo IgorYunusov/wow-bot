@@ -25,10 +25,11 @@ namespace WowBot.BotStuff.State
 
 		private void DecideTarget()
 		{
-			var a = ObjectManager.GetEnemies();
+			var a = ObjectManager.GetEnemies().OrderBy(x => Vector3.Distance(x.Position, Bot.runHandler.Position));
 			foreach(var b in a)
 			{
-				Console.WriteLine(b.Name);
+				Console.WriteLine(b.Name + ", " + Vector3.Distance(b.Position, Bot.runHandler.Position));
+				break;
 			}
 		}
 

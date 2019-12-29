@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace WowBot
+﻿namespace WowBot
 {
 	public enum Globals
 	{
@@ -708,8 +702,8 @@ namespace WowBot
 	public enum ObjectOffsets:int
 	{
 		Type = 0x14,
-		Pos_X = 0x79C,
-		Pos_Y = 0x798,
+		Pos_X = 0x798,
+		Pos_Y = 0x79C,
 		Pos_Z = 0x7A0,
 		Rot = 0x7A8,
 		Guid = 0x30,

@@ -62,9 +62,15 @@ namespace WowBot
 
 		internal static Unit.ReactionType GetReactionType(ulong guid)
 		{
+			ulong previousTargetGuid = Memory.Read<ulong>((int)Globals.CurrentTargetGUID);
+
 			Memory.Write<ulong>((int)Globals.CurrentTargetGUID, guid);
 			DoString($"reaction = UnitReaction(\"target\", \"player\");");
-			return (Unit.ReactionType)Convert.ToInt32(GetLocalizedText("reaction"));
+
+			Memory.Write<ulong>((int)Globals.CurrentTargetGUID, previousTargetGuid);
+
+			string reaction = GetLocalizedText("reaction");
+			return reaction == "" ? Unit.ReactionType.Unknown : (Unit.ReactionType)Convert.ToInt32(reaction);
 		}
 
 		public static int GetContainerNumFreeSlots()

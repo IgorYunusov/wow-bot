@@ -10,11 +10,8 @@ namespace WowBot
 {
 	class Program
 	{
-		static RunHandler runHandler;
-
 		static void Main(string[] args)
 		{
-			Init();
 			Bot bot = new Bot();
 
 			while (true)
@@ -24,14 +21,8 @@ namespace WowBot
 				Console.Clear();
 				bot.Update();
 
-				Thread.Sleep(50);
+				Thread.Sleep(100);
 			}
 		}
-
-		private static void Init()
-		{
-			runHandler = new RunHandler();
-		}
-
 	}
 }

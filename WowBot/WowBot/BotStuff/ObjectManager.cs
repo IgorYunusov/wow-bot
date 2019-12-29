@@ -13,7 +13,7 @@ namespace WowBot
 		static uint objectManager;
 		static List<GameObject> gameObjects = new List<GameObject>();
 		static DateTime lastScanTime;
-		const int UpdateAfterMillis = 1;
+		const int UpdateAfterMillis = 500;
 
 		static Dictionary<ulong, ReactionType> reactionCache = new Dictionary<ulong, ReactionType>();
 

@@ -10,10 +10,11 @@ namespace WowBot.BotStuff
 	class Bot
 	{
 		IBotState state;
+		public static RunHandler runHandler;
 
 		public Bot()
 		{
-
+			runHandler = new RunHandler();
 		}
 
 		public void Update()
