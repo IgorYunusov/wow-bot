@@ -13,7 +13,7 @@ namespace WowBot
 		static uint objectManager;
 		static List<GameObject> gameObjects = new List<GameObject>();
 		static DateTime lastScanTime;
-		const int UpdateAfterMillis = 500;
+		const int CollectAfterMillis = 500;
 
 		static Dictionary<ulong, ReactionType> reactionCache = new Dictionary<ulong, ReactionType>();
 
@@ -21,12 +21,11 @@ namespace WowBot
 		{
 			uint CurMgr = Memory.Read<uint>((uint)ObjectManagerEnum.CurMgrPointer);
 			objectManager = Memory.Read<uint>(CurMgr + (uint)ObjectManagerEnum.CurMgrOffset);
-			lastScanTime = DateTime.Now;
 		}
 
 		public static void Update()
 		{
-			if ((DateTime.Now - lastScanTime).TotalMilliseconds > UpdateAfterMillis)
+			if ((DateTime.Now - lastScanTime).TotalMilliseconds > CollectAfterMillis)
 			{
 				CollectAllObjects();
 				lastScanTime = DateTime.Now;
@@ -45,7 +44,7 @@ namespace WowBot
 
 		public static void CollectAllObjects()
 		{
-			gameObjects.Clear();
+			List<GameObject> gameObjectsToRemove = new List<GameObject>(gameObjects);
 
 			uint currObjPtr = objectManager + (uint)ObjectManagerEnum.FirstObject;
 			uint currentObjBaseAddress = Memory.Read<uint>(currObjPtr);
@@ -53,44 +52,80 @@ namespace WowBot
 			// don't know why but currentObjBase % 2 operation makes it work
 			while (currentObjBaseAddress != uint.MinValue && currentObjBaseAddress%2 == uint.MinValue) 
 			{
-				float x = Memory.Read<float>(currentObjBaseAddress + (int)ObjectOffsets.Pos_X);
-				ulong guid = Memory.Read<ulong>(currentObjBaseAddress + (int)ObjectOffsets.Guid);
-				GOType type = (GOType) Memory.Read<short>(currentObjBaseAddress + (uint)ObjectOffsets.Type);
+				GameObject go = AddToGameObjectsIfNotContainsGuid(currentObjBaseAddress);
 
-				switch (type)
-				{
-					case GOType.None:
-						break;
-					case GOType.Item:
-						break;
-					case GOType.Container:
-						break;
-					case GOType.Unit:
-						string name = GetName(currentObjBaseAddress);
-
-						if (false == reactionCache.ContainsKey(guid))
-							reactionCache.Add(guid, LuaHelper.GetReactionType(guid));
-
-						ReactionType reaction = reactionCache[guid];
-						gameObjects.Add(new Unit(currentObjBaseAddress, guid, type, name, reaction));
-						break;
-					case GOType.Player:
-						break;
-					case GOType.GameObject:
-						gameObjects.Add(new GameObject(currentObjBaseAddress ,guid, type));
-						break;
-					case GOType.DynamicObject:
-						break;
-					case GOType.Corpse:
-						break;
-					default:
-						break;
-				}
+				gameObjectsToRemove.Remove(go);
 
 				currObjPtr = currentObjBaseAddress + (uint)ObjectManagerEnum.NextObject;
 				currentObjBaseAddress = Memory.Read<uint>(currObjPtr);
+			};
 
-			} ;
+			if(gameObjectsToRemove.Count > 0)
+				gameObjects.RemoveAll(go => gameObjectsToRemove.Contains(go));
+		}
+
+		private static GameObject AddToGameObjectsIfNotContainsGuid(uint currentObjBaseAddress)
+		{
+			ulong guid = Memory.Read<ulong>(currentObjBaseAddress + (int)ObjectOffsets.Guid);
+			bool notContainsGuid = null == gameObjects.FirstOrDefault(go => go.Guid == guid);
+
+			if (notContainsGuid)
+			{
+				GameObject go = CreateGameObject(currentObjBaseAddress);
+				gameObjects.Add(go);
+			}
+
+			return gameObjects.First(go => go.Guid == guid);
+		}
+
+		private static GameObject CreateGameObject(uint currentObjBaseAddress)
+		{
+			ulong guid = Memory.Read<ulong>(currentObjBaseAddress + (int)ObjectOffsets.Guid);
+			GOType type = (GOType)Memory.Read<short>(currentObjBaseAddress + (uint)ObjectOffsets.Type);
+
+			GameObject go = null;
+
+			switch (type)
+			{
+				case GOType.None:
+					break;
+				case GOType.Item:
+					//do this later
+					go = new GameObject(currentObjBaseAddress, guid, type);
+					break;
+				case GOType.Container:
+					//do this later
+					go = new GameObject(currentObjBaseAddress, guid, type);
+					break;
+				case GOType.Unit:
+					string name = GetName(currentObjBaseAddress);
+
+					if (false == reactionCache.ContainsKey(guid))
+						reactionCache.Add(guid, LuaHelper.GetReactionType(guid));
+
+					ReactionType reaction = reactionCache[guid];
+					go = new Unit(currentObjBaseAddress, guid, type, name, reaction);
+					break;
+				case GOType.Player:
+					//do this later
+					go = new GameObject(currentObjBaseAddress, guid, type);
+					break;
+				case GOType.GameObject:
+					go = new GameObject(currentObjBaseAddress, guid, type);
+					break;
+				case GOType.DynamicObject:
+					//do this later
+					go = new GameObject(currentObjBaseAddress, guid, type);
+					break;
+				case GOType.Corpse:
+					//do this later
+					go = new GameObject(currentObjBaseAddress, guid, type);
+					break;
+				default:
+					break;
+			}
+
+			return go;
 		}
 
 		private static string GetName(uint currentObjBase)
