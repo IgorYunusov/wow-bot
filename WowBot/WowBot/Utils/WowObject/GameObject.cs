@@ -8,13 +8,13 @@ namespace WowBot.Utils.WowObject
 {
 	class GameObject
 	{
-		protected readonly uint baseAddress;
+		public readonly uint BaseAddress;
 		public readonly ulong Guid;
 		public readonly GOType Type;
 
-		public GameObject(uint baseAddress, ulong Guid, GOType Type)
+		public GameObject(uint BaseAddress, ulong Guid, GOType Type)
 		{
-			this.baseAddress = baseAddress;
+			this.BaseAddress = BaseAddress;
 			this.Guid = Guid;
 			this.Type = Type;
 		}

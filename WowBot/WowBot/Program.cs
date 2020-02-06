@@ -18,9 +18,10 @@ namespace WowBot
 			{
 				ObjectManager.Update();
 
-				Console.Clear();
+				//Console.Clear();
 				bot.Update();
 
+				
 				Thread.Sleep(100);
 			}
 		}

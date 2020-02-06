@@ -196,6 +196,8 @@
 	public enum CTMAction
 	{
 		Move = 4,
+		Loot = 6,
+		Attack = 10,
 		Stop = 13,
 	}
 

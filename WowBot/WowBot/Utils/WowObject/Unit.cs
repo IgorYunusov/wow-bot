@@ -18,10 +18,18 @@ namespace WowBot.Utils.WowObject
 			{
 				return new Vector3
 				(
-					Memory.Read<float>(baseAddress + (int)ObjectOffsets.Pos_X),
-					Memory.Read<float>(baseAddress + (int)ObjectOffsets.Pos_Y),
-					Memory.Read<float>(baseAddress + (int)ObjectOffsets.Pos_Z)
+					Memory.Read<float>(BaseAddress + (int)ObjectOffsets.Pos_X),
+					Memory.Read<float>(BaseAddress + (int)ObjectOffsets.Pos_Y),
+					Memory.Read<float>(BaseAddress + (int)ObjectOffsets.Pos_Z)
 				);
+			}
+		}
+
+		public int Health {
+			get
+			{
+				Console.WriteLine(Memory.Read<ulong>(BaseAddress + 0x04 + (int)WoWGameObjectFields.GAMEOBJECT_DYNAMIC));
+				return Memory.Read<int>(BaseAddress + 0x04 + (int)WoWGameObjectFields.GAMEOBJECT_DYNAMIC);
 			}
 		}
 

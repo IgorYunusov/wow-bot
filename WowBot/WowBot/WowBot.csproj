@@ -59,6 +59,7 @@
     <Compile Include="BotStuff\State\CombatState.cs" />
     <Compile Include="BotStuff\State\IBotState.cs" />
     <Compile Include="Utils\Address.cs" />
+    <Compile Include="Utils\CTM.cs" />
     <Compile Include="Utils\EnumsAndGlobals.cs" />
     <Compile Include="Utils\Hook.cs" />
     <Compile Include="Utils\LuaHelper.cs" />

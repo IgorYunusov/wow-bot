@@ -12,30 +12,46 @@ namespace WowBot.BotStuff.State
 	class CombatState : IBotState
 	{
 		string[] buffs = { Spell.RetributionAura, Spell.BlessingOfWisdom, Spell.SealOfWisdom};
+		Unit target;
 
 		public void Update()
 		{
 			DoBuffsIfNeeded();
 
-			DecideTarget();
-			RunToTarget();
+			if (null == target)
+				DecideTarget();
+
+			if (target.Health == 0)
+				Loot();
+			else
+				RunToTargetAndAutoAttack();
+
+			//Console.WriteLine(target.Health);
 
 			DoRotation();
 		}
 
-		private void DecideTarget()
+		private void Loot()
 		{
-			var a = ObjectManager.GetEnemies().OrderBy(x => Vector3.Distance(x.Position, Bot.runHandler.Position));
-			foreach(var b in a)
-			{
-				Console.WriteLine(b.Name + ", " + Vector3.Distance(b.Position, Bot.runHandler.Position));
-				break;
-			}
+			CTM.SetGuid(target.Guid);
+			CTM.SetPosition(target.Position);
+			CTM.SetAction(CTMAction.Loot);
 		}
 
-		private void RunToTarget()
+		private void DecideTarget()
 		{
+			List<Unit> enemies = ObjectManager.GetEnemies().
+				//Where(e => e.Health > 0).
+				OrderBy(e => Vector3.Distance(e.Position, Bot.runHandler.Position)).ToList();
 			
+			target = enemies[0];
+		}
+
+		private void RunToTargetAndAutoAttack()
+		{
+			CTM.SetGuid(target.Guid);
+			CTM.SetPosition(target.Position);
+			CTM.SetAction(CTMAction.Attack);
 		}
 
 		private void DoRotation()
