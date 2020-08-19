@@ -1,0 +1,17 @@
+site_name: AmeisenBot Docs
+docs_dir: docs
+theme:
+    name: readthedocs
+    highlightjs: true
+    hljs_languages:
+        - c#
+        - nasm
+        - lua
+nav:
+- 'index.md'
+- 'AmeisenBot.Core':
+  - 'ameisencore/AmeisenCore.md'
+  - 'ameisencore/AmeisenHook.md'
+  - 'ameisencore/AmeisenEventHook.md'
+- 'AmeisenBot.Utilities':
+  - 'ameisenutils/WowObjects/WowObject.md'

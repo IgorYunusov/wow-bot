@@ -1,0 +1,9 @@
+[submodule "WoW-LoginAutomator"]
+	path = WoW-LoginAutomator
+	url = https://github.com/Jnnshschl/WoW-LoginAutomator.git
+[submodule "AmeisenPath"]
+	path = AmeisenPath
+	url = https://github.com/Jnnshschl/AmeisenPath.git
+[submodule "AmeisenMovement"]
+	path = AmeisenMovement
+	url = https://github.com/Jnnshschl/AmeisenMovement

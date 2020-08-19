@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{54601391-C520-4EB3-A13E-7FD9B036389A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>AmeisenBotGUI</RootNamespace>
+    <AssemblyName>AmeisenBot</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>AmeisenBotGUI.App</StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="CombatEditor.xaml.cs">
+      <DependentUpon>CombatEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ChangeRealmlistDialog.xaml.cs">
+      <DependentUpon>ChangeRealmlistDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GearWindow.xaml.cs">
+      <DependentUpon>GearWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GroupView.xaml.cs">
+      <DependentUpon>GroupView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BotView.xaml.cs">
+      <DependentUpon>BotView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ColorPickDialog.xaml.cs">
+      <DependentUpon>ColorPickDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DebugWindow.xaml.cs">
+      <DependentUpon>DebugWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MapWindow.xaml.cs">
+      <DependentUpon>MapWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RememberUnitDialog.xaml.cs">
+      <DependentUpon>RememberUnitDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="CombatEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ChangeRealmlistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GearWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GroupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\BotView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ColorPickDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DebugWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BotWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MapWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RememberUnitDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SelectWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="BotWindow.xaml.cs">
+      <DependentUpon>BotWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SelectWindow.xaml.cs">
+      <DependentUpon>SelectWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="app.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AmeisenBot.Character\AmeisenBot.Character.csproj">
+      <Project>{23D5C950-8A33-414F-A366-99715073AA0B}</Project>
+      <Name>AmeisenBot.Character</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Combat\AmeisenBot.Combat.csproj">
+      <Project>{cd72ad54-7c40-4ec0-8878-0771922a2961}</Project>
+      <Name>AmeisenBot.Combat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Core\AmeisenBot.Core.csproj">
+      <Project>{567F9DF2-E2D0-4BC8-A295-B7913CC1303E}</Project>
+      <Name>AmeisenBot.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Data\AmeisenBot.Data.csproj">
+      <Project>{4B6AB536-AF35-4970-89FB-B45BC495F8BE}</Project>
+      <Name>AmeisenBot.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.DB\AmeisenBot.Persistence.csproj">
+      <Project>{9b3f7a78-0a9b-492a-8299-9c86d2e297ed}</Project>
+      <Name>AmeisenBot.Persistence</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.FSM\AmeisenBot.FSM.csproj">
+      <Project>{C93B8F0C-8CFA-45F6-9B2C-43B72E1CFE0F}</Project>
+      <Name>AmeisenBot.FSM</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Logger\AmeisenBot.Logger.csproj">
+      <Project>{017a67a9-f7bd-46e3-b716-e1d601afca4b}</Project>
+      <Name>AmeisenBot.Logger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Manager\AmeisenBot.Manager.csproj">
+      <Project>{6ca2c759-3166-4b71-a56d-e9ba28e72e33}</Project>
+      <Name>AmeisenBot.Manager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Map\AmeisenBot.Map.csproj">
+      <Project>{4A05827C-7AFE-4243-90AC-1BD03C41303C}</Project>
+      <Name>AmeisenBot.Map</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Utilities\AmeisenBot.Utilities.csproj">
+      <Project>{5369E077-2DC4-4DE5-9020-2C7DDB41686F}</Project>
+      <Name>AmeisenBot.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WoW-LoginAutomator\WoWLoginAutomator\WoWLoginAutomator.csproj">
+      <Project>{14811D57-C812-4651-85FA-7C65B974724B}</Project>
+      <Name>WoWLoginAutomator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <ItemGroup>
+      <MoveToLibFolder Include="$(OutputPath)*.dll ; $(OutputPath)*.pdb ; $(OutputPath)*.xml" />
+    </ItemGroup>
+    <Move SourceFiles="@(MoveToLibFolder)" DestinationFolder="$(OutputPath)lib" OverwriteReadOnlyFiles="true" />
+  </Target>
+</Project>
