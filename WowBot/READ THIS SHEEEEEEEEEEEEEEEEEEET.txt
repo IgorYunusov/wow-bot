@@ -1,0 +1,1 @@
+a forditasnal a blackmagicet le kell forditani előbb, utana lehet a botot is, a bothoz kell a GreyMagic mappából a fasm_dll
