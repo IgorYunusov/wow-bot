@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,6 +18,12 @@ namespace WowBot
 		bool InjectionUsed = false;
 		public BlackMagic Memory = new BlackMagic();
 		public int _processId = 0;
+
+		public uint IsThereCodeToExecute { get; private set; }
+		uint codeCaveForInjection;
+		uint returnAddress;
+
+
 		public Hook(int processId)
 		{
 			_processId = processId;
@@ -44,6 +51,65 @@ namespace WowBot
 				if (Memory.ReadByte(pEndScene) != 0xE9) // check if wow is already hooked
 				{
 					try
+					{
+						pEndScene += 0x2; //köll ez?
+
+						//byte[] originalEndscene = Memory.ReadBytes(pEndScene, 5);
+						byte[] originalEndscene = new byte[] { 0xB8, 0x51, 0xD7, 0xCA, 0x64 }; 
+
+						uint endsceneReturnAddress = pEndScene + 0x5;
+						
+						IsThereCodeToExecute = Memory.AllocateMemory(4);
+						Memory.WriteInt(IsThereCodeToExecute, 0);
+
+						returnAddress = Memory.AllocateMemory(4);
+						Memory.WriteInt(returnAddress, 0);
+
+						uint codeCave = Memory.AllocateMemory(64);
+						codeCaveForInjection = Memory.AllocateMemory(256);
+
+						Memory.Asm.Clear();
+						Memory.Asm.AddLine("PUSHFD");
+						Memory.Asm.AddLine("PUSHAD");
+
+						Memory.Asm.AddLine($"MOV EBX, [{IsThereCodeToExecute}]"); //check if ther is code to execute 
+						Memory.Asm.AddLine("CMP EBX, 1");		//TODO: CHANGE THIS BACK LÉÁTER!%%!!
+						Memory.Asm.AddLine($"JNE @out"); //if there is no, jump to @out
+
+						//execute our code
+						Memory.Asm.AddLine($"MOV EDX, {codeCaveForInjection}");		//teygük be a kódunkat EDX be
+						Memory.Asm.AddLine($"CALL EDX");							//Hívjuk meg
+						Memory.Asm.AddLine($"MOV [{returnAddress}], EDX");          // [] == dereferálás, a returnAdress ben lévő címre tegyük az eredményt, ne közvetlen a returnAddressbe
+
+						Memory.Asm.AddLine($"@out:");
+						Memory.Asm.AddLine("MOV EDX, 0"); //we have finished the execution, set <isThereCodeToExecute> back to 0
+						Memory.Asm.AddLine($"MOV [{(IsThereCodeToExecute)}], EDX");
+
+						Memory.Asm.AddLine("POPAD");
+						Memory.Asm.AddLine("POPFD");
+
+						int asmLength = Memory.Asm.Assemble().Length;
+
+						Memory.Asm.Inject(codeCave);
+
+						Memory.Asm.Clear();
+
+						Memory.WriteBytes(codeCave + (uint)asmLength, originalEndscene);
+
+						Memory.Asm.AddLine($"JMP {endsceneReturnAddress}");
+						Memory.Asm.Inject(codeCave + (uint)asmLength + 5);
+						Memory.Asm.Clear();
+
+						Memory.Asm.AddLine($"JMP {codeCave}");
+						Memory.Asm.Inject(pEndScene);
+
+					}
+					catch (Exception e)
+					{
+						
+					}
+
+					/*try
 					{
 						threadHooked = false; // allocate memory to store injected code:
 						injected_code = Memory.AllocateMemory(2048); // allocate memory the new injection code pointer:
@@ -85,11 +151,80 @@ namespace WowBot
 					{
 						threadHooked = false;
 						return;
-					}
+					}*/
 				}
 				threadHooked = true;
 			}
 		}
+		
+		public void AddJob()
+		{
+			Console.WriteLine("addjob");
+
+			string command = "DEFAULT_CHAT_FRAME: AddMessage(\"Hello, World!\")";
+
+			uint argCCCommand = Memory.AllocateMemory(Encoding.UTF8.GetBytes(command).Length + 1);
+			Memory.WriteBytes(argCCCommand, Encoding.UTF8.GetBytes(command));
+
+			/*Memory.Asm.AddLine($"MOV EAX, {argCCCommand}");
+			Memory.Asm.AddLine("PUSH 0");
+			Memory.Asm.AddLine("PUSH EAX");
+			Memory.Asm.AddLine("PUSH EAX");
+			Memory.Asm.AddLine($"CALL {(uint)Lua.Lua_DoString}");
+
+			Memory.Asm.AddLine("ADD ESP, 0xC");
+			Memory.Asm.AddLine("RETN");
+
+			 version 2 */
+			Memory.Asm.Clear();
+
+			Memory.Asm.AddLine($"MOV EAX, {argCCCommand}");
+			Memory.Asm.AddLine("PUSH 0");
+			Memory.Asm.AddLine("PUSH EAX");
+			Memory.Asm.AddLine("PUSH EAX");
+			Memory.Asm.AddLine($"MOV EAX, {(uint)Lua.Lua_DoString}");
+			Memory.Asm.AddLine($"CALL EAX");
+
+			Memory.Asm.AddLine("ADD ESP, 0xC");
+			Memory.Asm.AddLine("RETN");
+
+			// now there is code to be executed
+			Memory.WriteInt(IsThereCodeToExecute, 1);
+			// inject it
+			Memory.Asm.Inject(codeCaveForInjection);
+
+			while (Memory.ReadInt(IsThereCodeToExecute) > 0)
+			{
+				Thread.Sleep(1);
+			}
+
+			try
+			{
+				List<byte> returnBytes = new List<byte>();
+
+				uint dwAddress = Memory.ReadUInt(returnAddress);
+				byte buffer = Memory.ReadByte(dwAddress);
+
+				while (buffer != 0)
+				{
+					returnBytes.Add(buffer);
+					dwAddress = dwAddress + 1;
+					buffer = Memory.ReadByte(dwAddress);
+				}
+			}
+			catch
+			{
+
+			}
+
+			
+		}
+
+		public void GetLocalizedText()
+		{
+
+		}
+
 		public void DisposeHooking()
 		{
 			try
