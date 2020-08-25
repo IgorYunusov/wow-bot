@@ -1,0 +1,122 @@
+So I set up my Hook and DoString stuff via understanding and using this guys's code: [URL="https://ameisenbot-335a.readthedocs.io/en/latest/"]https://ameisenbot-335a.readthedocs.io/en/latest/[/URL]
+
+My code seems to be OK, the hooking works, since the int variable (IsThereCodeToExecute) seems to flip back to 0 after I add a job to be executed via the hook. DoString is identical with the codes I've seen so far, and as I understand it, it is also correct.
+
+Now my question is, if I add a command for DoString, like : "DEFAULT_CHAT_FRAME: AddMessage("Hello, World!")", than a message of "Hello, World!" should appear in the chatframe if I've done everything correctly right? I am ATM wondering if I fucked up the code, or I am fine and Dostring is something different than what I think it is. 
+
+I actually tried to execute this code via WowLua [URL="https://www.curseforge.com/wow/addons/wowlua"]https://www.curseforge.com/wow/addons/wowlua[/URL]
+Calling 
+[CODE]local s = "DEFAULT_CHAT_FRAME: AddMessage(\"Hello, World!\")"
+loadstring(s)()[/CODE]
+adds a message perfectly. Does calling dostring identical to this?
+
+I am fine with a yes or no answer, but here's my code though:
+
+Hook
+
+[CODE]if (Memory.IsProcessOpen)
+			{ // Get address of EndScene
+
+				if (Memory.ReadByte(pEndScene) == 0xE9 && (injected_code == 0 || addresseInjection == 0)) // check if wow is already hooked and dispose Hook
+				{
+					DisposeHooking();
+				}
+				if (Memory.ReadByte(pEndScene) != 0xE9) // check if wow is already hooked
+				{
+					try
+					{
+						pEndScene += 0x2; //köll ez?
+
+						//byte[] originalEndscene = Memory.ReadBytes(pEndScene, 5);
+						byte[] originalEndscene = new byte[] { 0xB8, 0x51, 0xD7, 0xCA, 0x64 }; 
+
+						uint endsceneReturnAddress = pEndScene + 0x5;
+						
+						IsThereCodeToExecute = Memory.AllocateMemory(4);
+						Memory.WriteInt(IsThereCodeToExecute, 0);
+
+						returnAddress = Memory.AllocateMemory(4);
+						Memory.WriteInt(returnAddress, 0);
+
+						uint codeCave = Memory.AllocateMemory(64);
+						codeCaveForInjection = Memory.AllocateMemory(256);
+
+						Memory.Asm.Clear();
+						Memory.Asm.AddLine("PUSHFD");
+						Memory.Asm.AddLine("PUSHAD");
+
+						Memory.Asm.AddLine($"MOV EBX, [{IsThereCodeToExecute}]"); //check if ther is code to execute 
+						Memory.Asm.AddLine("CMP EBX, 1");		
+						Memory.Asm.AddLine($"JNE @out"); //if there is no, jump to @out
+
+						//execute our code
+						Memory.Asm.AddLine($"MOV EDX, {codeCaveForInjection}");		//teygük be a kódunkat EDX be
+						Memory.Asm.AddLine($"CALL EDX");							//Hívjuk meg
+						Memory.Asm.AddLine($"MOV [{returnAddress}], EDX");          // [] == dereferálás, a returnAdress ben lévő címre tegyük az eredményt, ne közvetlen a returnAddressbe
+
+						Memory.Asm.AddLine($"@out:");
+						Memory.Asm.AddLine("MOV EDX, 0"); //we have finished the execution, set <isThereCodeToExecute> back to 0
+						Memory.Asm.AddLine($"MOV [{(IsThereCodeToExecute)}], EDX");
+
+						Memory.Asm.AddLine("POPAD");
+						Memory.Asm.AddLine("POPFD");
+
+						int asmLength = Memory.Asm.Assemble().Length;
+
+						Memory.Asm.Inject(codeCave);
+
+						Memory.Asm.Clear();
+
+						Memory.WriteBytes(codeCave + (uint)asmLength, originalEndscene);
+
+						Memory.Asm.AddLine($"JMP {endsceneReturnAddress}");
+						Memory.Asm.Inject(codeCave + (uint)asmLength + 5);
+						Memory.Asm.Clear();
+
+						Memory.Asm.AddLine($"JMP {codeCave}");
+						Memory.Asm.Inject(pEndScene);
+
+					}
+					catch (Exception e)
+					{
+						
+					}
+}
+[/CODE]
+
+DoString:
+[CODE]public void AddJob()
+{
+	Console.WriteLine("addjob");
+
+	string command = "/run \"DEFAULT_CHAT_FRAME: AddMessage(\"Hello, World!\")\"";
+
+	uint argCCCommand = Memory.AllocateMemory(Encoding.UTF8.GetBytes(command).Length + 1);
+	Memory.WriteBytes(argCCCommand, Encoding.UTF8.GetBytes(command));
+
+	Memory.Asm.Clear();
+
+	Memory.Asm.AddLine($"MOV EAX, {argCCCommand}");
+	Memory.Asm.AddLine("PUSH 0");
+	Memory.Asm.AddLine("PUSH EAX");
+	Memory.Asm.AddLine("PUSH EAX");
+	Memory.Asm.AddLine($"MOV EAX, {(uint)Lua.Lua_DoString}");
+	Memory.Asm.AddLine($"CALL EAX");
+
+	Memory.Asm.AddLine("ADD ESP, 0xC");
+	Memory.Asm.AddLine("RETN");
+
+	// now there is code to be executed
+	Memory.WriteInt(IsThereCodeToExecute, 1);
+	// inject it
+	Memory.Asm.Inject(codeCaveForInjection);
+
+	while (Memory.ReadInt(IsThereCodeToExecute) > 0)
+	{
+		Thread.Sleep(1);
+	}
+
+	Console.WriteLine("jobsdone");
+
+	
+}[/CODE]
