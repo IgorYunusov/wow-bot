@@ -14,13 +14,27 @@ namespace WowBot
 		{
 			Bot bot = new Bot();
 
+			var proc = Process.GetProcessesByName("wow")[0];
+			Hook hook = new Hook(proc.Id);
+
+			int a = 10;
+
 			while (true)
 			{
-				ObjectManager.Update();
+				//ObjectManager.Update();
 
 				//Console.Clear();
-				bot.Update();
-
+				//bot.Update();
+				a--;
+				if (a == 0)
+				{
+					hook.DoString();
+				}
+				
+				if (a == -10) 
+				{ 
+					hook.GetLocalizedText();
+				}
 				
 				Thread.Sleep(100);
 			}

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,7 +80,7 @@ namespace WowBot
 						//execute our code
 						Memory.Asm.AddLine($"MOV EDX, {codeCaveForInjection}");		//teygük be a kódunkat EDX be
 						Memory.Asm.AddLine($"CALL EDX");							//Hívjuk meg
-						Memory.Asm.AddLine($"MOV [{returnAddress}], EDX");          // [] == dereferálás, a returnAdress ben lévő címre tegyük az eredményt, ne közvetlen a returnAddressbe
+						Memory.Asm.AddLine($"MOV [{returnAddress}], EAX");          // [] == dereferálás, a returnAdress ben lévő címre tegyük az eredményt, ne közvetlen a returnAddressbe
 
 						Memory.Asm.AddLine($"@out:");
 						Memory.Asm.AddLine("MOV EDX, 0"); //we have finished the execution, set <isThereCodeToExecute> back to 0
@@ -157,25 +158,25 @@ namespace WowBot
 			}
 		}
 		
-		public void AddJob()
+		public void DoString()
 		{
-			Console.WriteLine("addjob");
+			while (Memory.ReadInt(IsThereCodeToExecute) > 0 || InjectionUsed)
+			{
+				Thread.Sleep(1);
+			}
+			InjectionUsed = true;
 
-			string command = "DEFAULT_CHAT_FRAME: AddMessage(\"Hello, World!\")";
+			Console.WriteLine("dostring");
 
-			uint argCCCommand = Memory.AllocateMemory(Encoding.UTF8.GetBytes(command).Length + 1);
-			Memory.WriteBytes(argCCCommand, Encoding.UTF8.GetBytes(command));
+			string variable = "freeslots";
+			string command = $"DEFAULT_CHAT_FRAME: AddMessage(\"SZOPKIAGECIM\")";
+			string command2 = $"{variable} = GetContainerNumFreeSlots(0) + GetContainerNumFreeSlots(1) + GetContainerNumFreeSlots(2) + GetContainerNumFreeSlots(3) + GetContainerNumFreeSlots(4);" +
+							  $"DEFAULT_CHAT_FRAME: AddMessage({variable})";
+			string command3 = $"{variable} = \"YES\"";
 
-			/*Memory.Asm.AddLine($"MOV EAX, {argCCCommand}");
-			Memory.Asm.AddLine("PUSH 0");
-			Memory.Asm.AddLine("PUSH EAX");
-			Memory.Asm.AddLine("PUSH EAX");
-			Memory.Asm.AddLine($"CALL {(uint)Lua.Lua_DoString}");
+			uint argCCCommand = Memory.AllocateMemory(Encoding.UTF8.GetBytes(command2).Length + 1);
+			Memory.WriteBytes(argCCCommand, Encoding.UTF8.GetBytes(command2));
 
-			Memory.Asm.AddLine("ADD ESP, 0xC");
-			Memory.Asm.AddLine("RETN");
-
-			 version 2 */
 			Memory.Asm.Clear();
 
 			Memory.Asm.AddLine($"MOV EAX, {argCCCommand}");
@@ -198,31 +199,89 @@ namespace WowBot
 				Thread.Sleep(1);
 			}
 
+			Memory.FreeMemory(argCCCommand);
+			InjectionUsed = false;
+		}
+
+		public string GetLocalizedText(string variable)
+		{ 
+			uint variableAddress = Memory.AllocateMemory(Encoding.UTF8.GetBytes(variable).Length + 1); // offset:
+			Memory.WriteBytes(variableAddress, Encoding.UTF8.GetBytes(variable));
+
+			Memory.Asm.Clear();
+
+			Memory.Asm.AddLine($"CALL {(uint)Globals.ClntObjMgrGetActivePlayerObj}");
+			Memory.Asm.AddLine("MOV ECX, EAX");
+			Memory.Asm.AddLine("PUSH -1");
+			Memory.Asm.AddLine($"PUSH {variableAddress}");
+			Memory.Asm.AddLine($"CALL {(uint)Lua.Lua_GetLocalizedText}");
+			Memory.Asm.AddLine($"RETN");
+
+
+			// Inject the shit 
+			//string sResult = Encoding.ASCII.GetString(MyHook.InjectAndExecute(asm)); // Free memory allocated for command 
+			Memory.FreeMemory(variableAddress); // Uninstall the hook 
+			return null;//return sResult;
+		}
+		uint dwAddress;
+		public void GetLocalizedText()
+		{
+			while (Memory.ReadInt(IsThereCodeToExecute) > 0 || InjectionUsed)
+			{
+				Thread.Sleep(1);
+			}
+
+			Console.WriteLine("gettext");
+
+			string variable = "freeslots";
+
+			uint argCC = Memory.AllocateMemory(Encoding.UTF8.GetBytes(variable).Length + 1);
+			Memory.WriteBytes(argCC, Encoding.UTF8.GetBytes(variable));
+
+			Memory.Asm.Clear();
+
+			Memory.Asm.AddLine($"CALL {(uint)Globals.ClntObjMgrGetActivePlayerObj}");
+			Memory.Asm.AddLine("MOV ECX, EAX");
+			Memory.Asm.AddLine("PUSH -1");
+			Memory.Asm.AddLine($"PUSH {(argCC)}");
+			Memory.Asm.AddLine($"CALL {(uint)Lua.Lua_GetLocalizedText}");
+			Memory.Asm.AddLine("RETN");
+
+
+			// now there is code to be executed
+			Memory.WriteInt(IsThereCodeToExecute, 1);
+			// inject it
+			Memory.Asm.Inject(codeCaveForInjection);
+
+			while (Memory.ReadInt(IsThereCodeToExecute) > 0)
+			{
+				Thread.Sleep(1);
+			}
+
 			try
 			{
 				List<byte> returnBytes = new List<byte>();
-
-				uint dwAddress = Memory.ReadUInt(returnAddress);
+				dwAddress = Memory.ReadUInt(returnAddress);
 				byte buffer = Memory.ReadByte(dwAddress);
-
+				
 				while (buffer != 0)
 				{
 					returnBytes.Add(buffer);
 					dwAddress = dwAddress + 1;
 					buffer = Memory.ReadByte(dwAddress);
 				}
+
+				string result = Encoding.UTF8.GetString(returnBytes.ToArray());
+
+				Console.WriteLine(result);
 			}
-			catch
+			catch(Exception e)
 			{
 
 			}
 
-			
-		}
-
-		public void GetLocalizedText()
-		{
-
+			Memory.FreeMemory(argCC);
+			InjectionUsed = false;
 		}
 
 		public void DisposeHooking()
