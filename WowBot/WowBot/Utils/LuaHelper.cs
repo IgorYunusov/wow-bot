@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WowBot.Utils;
 using WowBot.Utils.WowObject;
 
 namespace WowBot
@@ -21,9 +22,9 @@ namespace WowBot
 			if (MyHook == null)
 				MyHook = new Hook(proc.Id);
 
-			uint DoStringArg_Codecave = MyHook.Memory.AllocateMemory(Encoding.UTF8.GetBytes(command).Length + 1); // offset:
+			uint DoStringArg_Codecave = MemoryHandler.Instance.AllocateMemory(Encoding.UTF8.GetBytes(command).Length + 1); // offset:
 			uint FrameScript__Execute = 0x819210; // Write value:
-			MyHook.Memory.WriteBytes(DoStringArg_Codecave, Encoding.UTF8.GetBytes(command)); // Write the asm stuff for Lua_DoString
+			MemoryHandler.Instance.WriteBytes(DoStringArg_Codecave, Encoding.UTF8.GetBytes(command)); // Write the asm stuff for Lua_DoString
 			string[] asm = new string[] {
 				"mov eax, " + DoStringArg_Codecave,
 				"push 0",
@@ -36,16 +37,16 @@ namespace WowBot
 			};
 			// Inject
 			MyHook.InjectAndExecute(asm); // Free memory allocated
-			MyHook.Memory.FreeMemory(DoStringArg_Codecave);
+			MemoryHandler.Instance.FreeMemory(DoStringArg_Codecave);
 		}
 
 		public static string GetLocalizedText(string Commandline)
 		{ // Command to send using LUA 
 			string Command = Commandline; // Allocate memory for command 
-			uint Lua_GetLocalizedText_Space = MyHook.Memory.AllocateMemory(Encoding.UTF8.GetBytes(Command).Length + 1); // offset:
+			uint Lua_GetLocalizedText_Space = MemoryHandler.Instance.AllocateMemory(Encoding.UTF8.GetBytes(Command).Length + 1); // offset:
 			uint ClntObjMgrGetActivePlayerObj = 0x4038F0;
 			uint FrameScript__GetLocalizedText = 0x7225E0; // Write command in the allocated memory 
-			MyHook.Memory.WriteBytes(Lua_GetLocalizedText_Space, Encoding.UTF8.GetBytes(Command));
+			MemoryHandler.Instance.WriteBytes(Lua_GetLocalizedText_Space, Encoding.UTF8.GetBytes(Command));
 			string[] asm = new string[] {
 				"call " + (uint) ClntObjMgrGetActivePlayerObj,
 				"mov ecx, eax",
@@ -56,7 +57,7 @@ namespace WowBot
 			};
 			// Inject the shit 
 			string sResult = Encoding.ASCII.GetString(MyHook.InjectAndExecute(asm)); // Free memory allocated for command 
-			MyHook.Memory.FreeMemory(Lua_GetLocalizedText_Space); // Uninstall the hook 
+			MemoryHandler.Instance.FreeMemory(Lua_GetLocalizedText_Space); // Uninstall the hook 
 			return sResult;
 		}
 

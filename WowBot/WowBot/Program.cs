@@ -1,43 +1,38 @@
 ﻿using Binarysharp.MemoryManagement;
 using Binarysharp.MemoryManagement.Helpers;
+using Binarysharp.MemoryManagement.Native;
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
+using System.Windows.Input;
 using WowBot.BotStuff;
+using WowBot.Utils;
+using WowBot.Visuals;
 
 namespace WowBot
 {
 	class Program
 	{
+		[STAThread]
 		static void Main(string[] args)
 		{
-			Bot bot = new Bot();
-
-			var proc = Process.GetProcessesByName("wow")[0];
-			Hook hook = new Hook(proc.Id);
-
-			int a = 10;
-
-			while (true)
-			{
-				//ObjectManager.Update();
-
-				//Console.Clear();
-				//bot.Update();
-				a--;
-				if (a == 0)
-				{
-					hook.DoString();
-				}
-				
-				if (a == -10) 
-				{ 
-					hook.GetLocalizedText();
-				}
-				
-				Thread.Sleep(100);
-			}
+			SetupForm();
 		}
+
+
+		private static void SetupForm()
+		{
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new MainForm());
+		}
+
+		private static void SetupBot()
+		{
+		
+		}
+
 	}
 }

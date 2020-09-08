@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WowBot.Utils;
 using WowBot.Utils.WowObject;
 using static WowBot.Utils.WowObject.Unit;
 
@@ -40,6 +41,12 @@ namespace WowBot
 		public static List<T> GetObjects<T>()
 		{
 			return gameObjects.OfType<T>().ToList();
+		}
+
+		public static uint GetPlayerBaseAddress()
+		{
+			ulong playerGUID = MemoryHandler.Instance.ReadUInt64((uint)Globals.LocalGUID);
+			return gameObjects.FirstOrDefault(o => o.Guid == playerGUID).BaseAddress;
 		}
 
 		public static void CollectAllObjects()
