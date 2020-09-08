@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MiningBot", "MiningBot\MiningBot.csproj", "{EA4499FB-9A95-4525-A939-D209DC61C2A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EA4499FB-9A95-4525-A939-D209DC61C2A7}.Debug|x86.ActiveCfg = Debug|x86
+		{EA4499FB-9A95-4525-A939-D209DC61C2A7}.Debug|x86.Build.0 = Debug|x86
+		{EA4499FB-9A95-4525-A939-D209DC61C2A7}.Release|x86.ActiveCfg = Release|x86
+		{EA4499FB-9A95-4525-A939-D209DC61C2A7}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

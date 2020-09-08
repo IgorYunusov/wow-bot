@@ -1,0 +1,22 @@
+click to loot engedélyezve
+interact with mouseover a key bindingsben K ra állítva
+autoloot engedélyezve
+
+/script RepopMe()
+/script 
+
+az actionbar beállításai 
+1 - rend
+2 - mortal strike
+3 - overpower
+4 - execute
+5 - bladestorm
+6 - heroic strike
+7 - berserker rage
+8 - enraged regen
+9 - bloodrage
+0 - cannibalize
+G - kaja
+F - mount 
+
+- kell még a sellJunk addon amit átírtam ld a sellJunk Mappa

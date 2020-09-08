@@ -1,0 +1,12 @@
+click to loot engedélyezve
+interact with mouseover a key bindingsben B re állítva
+autoloot engedélyezve
+jobb szélső 1es action bar legfelső gombja a mount / a mount indexet meg kell adni abc sorrendben van
+a második legfelső a kaja
+
+1 2 3 4 action bar gombok rendre: 
+1: /run if IsMounted() == nil then CallCompanion('MOUNT', 1) end
+2: Bladestrom
+3: 	/cast Bloodrage
+	/cancelaura Bloodrage
+4: Battle Shout

@@ -1,0 +1,5 @@
+click to loot engedélyezve
+interact with mouseover a key bindingsben B re állítva
+autoloot engedélyezve
+jobb szélső 1es action bar legfelső gombja a mount / a mount indexet meg kell adni abc sorrendben van
+a második legfelső a kaja
